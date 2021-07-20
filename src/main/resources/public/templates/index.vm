@@ -1,0 +1,54 @@
+#set( $title = "Welcome Page" )
+#parse("public/templates/top.vm")
+
+#if($currentUser)
+
+    <div class="container">
+
+    </div>
+    <h1>Works by you and authors you follow: </h1>
+    <div class="divContents">
+        <p>
+        #foreach($feed in $feeds)
+            <li><i class="content work">$feed.title split $feed.id</i> <button type="button" class="$feed.id, $currentUser.username">Favorite</button></li>
+            ##This works by sending both the title and the id to the worklink script,
+            ##Then having worklink handle what it looks like
+            ##So split and the id doesnt actually show up on the list
+        #end
+        </p>
+    </div>
+
+    <script>
+        function addFav(input) {
+            var inputArr = input.split(",");
+
+            const hostname = window.location.href;
+            var host = new URL(hostname).host;
+
+            fetch('https://' + host + '/addFav?username=' + inputArr[1] + "&workId="
+                    + inputArr[0], {
+                        method: 'POST',
+                    }
+            ).then(res => window.location.reload(true));
+        }
+        let favButtons = document.querySelectorAll("button")
+        Array.prototype.forEach.call(favButtons, function(button) {
+            button.addEventListener('click', addFav.bind(null, button.className));
+        });
+    </script>
+#else
+<h1>Please login first!</h1>
+<form action="/" method="post">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" placeholder="username" name="username" id="username"/>
+    </div>
+    <button onclick="addUser()">Submit</button>
+</form>
+#end
+
+<script src="/js/adduser.js"></script>
+<script src="/js/addfavorite.js"></script>
+<script src="/js/worklink.js"></script>
+
+#parse("public/templates/bottom.vm")

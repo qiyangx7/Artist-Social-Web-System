@@ -1,0 +1,200 @@
+#set( $title = "User Profile" )
+#set( $display = false)
+
+#parse("public/templates/top.vm")
+
+<div class="container">
+    <div class="jumbotron">
+        <div>
+            <!-- Include stylesheet -->
+            <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+            <!-- Create the editor container -->
+            <div id="editor">
+            </div>
+
+            <!-- Include the Quill library -->
+            <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+        </div>
+
+        #if($userProfile && $userProfile.isPublic())
+            #set ($public = 1)
+            #set ($display = true)
+        #elseif($userProfile && ($profileUser.id == $currentUser.id))
+            #set ($public = 0)
+            #set ($display = true)
+        #end
+
+        #if($display)
+
+            <h1>Welcome to $profileUser.username's Profile</h1>
+            <div class = "profile pic">
+                <img src = "/img/blank%20profile%20pic.png">
+            </div>
+
+            <div>
+            #if($isFollower)
+                <button type="button" id="following" onclick="removeFollower($profileUser.id, $currentUser.id)">
+                    Unsubscribe
+                </button>
+                <script>
+                    function removeFollower(userId, followerId) {
+
+                        alert("Removing follower...")
+
+                        const hostname = window.location.href;
+                        var host = new URL(hostname).host;
+
+                        return fetch('https://' + host + '/removefollower?'
+                                + 'userId=' + userId
+                                + '&followerId=' + followerId, {
+                                    method: 'POST',
+                                }
+                        ).then(res => window.location.reload(true));
+
+                    }
+                </script>
+            #elseif ($profileUser.id != $currentUser.id)
+                <button type="button" id="follow" onclick="addFollower($profileUser.id, $currentUser.id)">
+                    Subscribe
+                </button>
+                <script>
+                    function addFollower(userId, followerId) {
+
+                        alert("Adding follower...")
+
+                        const hostname = window.location.href;
+                        var host = new URL(hostname).host;
+
+                        return fetch('https://' + host + '/addfollower?'
+                                + 'userId=' + userId
+                                + '&followerId=' + followerId, {
+                                    method: 'POST',
+                                }
+                        ).then(res => window.location.reload(true));
+
+                    }
+                </script>
+            #end
+            </div>
+
+            <div>
+                <h4>
+                    Bio:
+                    <div id="bioDisplay"></div>
+                    <script>
+                        var options = {
+                            readOnly: true,
+                            theme: 'bubble'
+                        };
+                        var quill = new Quill('#bioDisplay', options);
+
+                        var content = $userProfile.bio;
+                        content = JSON.stringify(content);
+                        quill.setContents(JSON.parse(content));
+                    </script>
+
+                    #if ($profileUser.id == $currentUser.id)
+
+                    <div id="bioEditor" ></div>
+                        <input type="submit" class="btn btn-outline-secondary" value="Edit Bio" id="editBio"/>
+
+                    <script>
+                        document.getElementById("editBio").addEventListener('click', editBio, { once: true });
+
+                        function editBio() {
+                            alert("Editing bio...")
+
+                            var bioQuill = new Quill('#bioEditor', {
+                                theme: 'snow'
+                            });
+
+                            document.getElementById("editBio").addEventListener('click', () => {submitBio()});
+                        }
+
+                        function submitBio() {
+                            var container = document.querySelector('#bioEditor');
+                            var bioQuill = Quill.find(container);
+                            if (bioQuill === null) {
+                                alert("We have a problem!")
+                            }
+                            else {
+                                addBio(bioQuill);
+                            }
+                        }
+
+                        function addBio(bioQuill){
+
+                            alert("Updating bio...");
+
+                            const hostname = window.location.href;
+                            var host = new URL(hostname).host;
+
+                            var content = JSON.stringify(bioQuill.getContents());
+                            return fetch('https://' + host + '/updateuserprofile?'
+                                    + 'userId=' + '$userProfile.userID'
+                                    + '&isPublic=' + '$public'
+                                    + '&favoriteWorks=' + '$userProfile.favoriteWorks'
+                                    + '&bio=' + content, {
+                                        method: 'POST',
+                                    }
+                            ).then(res => window.location.reload(true));
+                        }
+                    </script>
+
+
+                    #end
+                </h4>
+
+                <hr class="my-4">
+
+                <h4>Favorited works:</h4>
+                    <ul id="list"><i id="favorites">$favorites</i></ul>
+                    <script>
+                        var favorites = document.getElementById("favorites");
+                        console.log(favorites);
+                        var favArray = favorites.textContent.split(",");
+                        console.log(favArray);
+                        var list = document.getElementById("list");
+                        list.removeChild(list.childNodes[0]);
+                        for (var i = 0; i < favArray.length - 1; i++) {
+                            var node = document.createElement("li");
+                            fav = favArray[i].split(";");
+                            var a = document.createElement("a");
+                            a.innerText = fav[0];
+                            a.href = "/works/" + fav[1];
+                            node.appendChild(a);
+                            if ($profileUser.id === $currentUser.id) {
+                                var button = document.createElement("button");
+                                button.innerHTML = "Remove"
+                                button.className = fav[1];
+                                button.addEventListener("click", removeFav.bind(null, button.className));
+                                node.append(button);
+                            }
+                            list.appendChild(node);
+                        }
+
+                        function removeFav(workId) {
+
+                            const hostname = window.location.href;
+                            var host = new URL(hostname).host;
+
+                            return fetch('https://' + host + '/removeFav?workId=' + workId, {
+                                        method: 'POST',
+                                    }
+                            ).then(res => window.location.reload(true));
+                        }
+                    </script>
+
+            </div>
+
+
+        #else
+            <h1>The user's profile is private!</h1>
+        #end
+        ##<script src="js/favoriteworklink.js"></script>
+    </div>
+</div>
+
+#parse("public/templates/bottom.vm")

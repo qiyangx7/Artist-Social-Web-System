@@ -1,0 +1,82 @@
+* {
+    cursor: url(../img/default_cursor.gif), auto;
+    margin: 0;
+    padding: 0;
+}
+
+.mascot {
+    background-image: url(../img/mascot.gif);
+    background-repeat:no-repeat;
+    background-size:contain;
+    width: 5%;
+    padding: 5% 0 30% 20%;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+}
+
+body {
+    background-image: url(../img/bg.png);
+    background-repeat: repeat;
+    margin-top: 5%;
+}
+
+.divContents, form{
+    background: #d3d4d7;
+    text-align: left;
+    padding: 10px 30px 10px 30px;
+    margin-left: 10px;
+    float: left;
+    box-shadow: 7px 7px rgb(84, 87, 90);
+}
+.indexLinkWrapper {
+    margin-left: 10px;
+}
+.content {
+    color: #1b1d29;
+    font-family: "Comic Sans MS", serif;
+}
+
+.indexLink {
+    font-size: 27px;
+}
+
+.author {
+    padding: 7px;
+    font-size: 18px;
+}
+
+#divSubmit {
+    text-align: center;
+}
+
+.submit {
+    background: #273746 ;
+    color: #F1C40F;
+    font-family: "Comic Sans MS" ;
+    font-weight: bolder;
+    font-size: 30px;
+    padding: 0 40px 0 40px;
+    border-radius: 0 16px 0 16px;
+}
+
+form label {
+    padding: 22px;
+    font-size: 20px;
+}
+
+form input[type=text], input[type=number] {
+    padding: 10px;
+    margin: 10px;
+    font-family: "Comic Sans MS";
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 6px;
+}
+
+ol li button{
+    color: red;
+    border-radius: 50%;
+    font-weight: bold;
+    border: 2px solid red;
+}

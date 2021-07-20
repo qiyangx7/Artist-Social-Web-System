@@ -1,0 +1,40 @@
+#set( $title = "Works" )
+#parse("public/templates/top.vm")
+
+#if ($works)
+
+<h1>List of all works: </h1>
+<div class="divContents">
+    <ol>
+    <p>
+        #foreach($work in $works)
+            <li><i class="content work">$work.title split $work.id</i> <button type="button" class="$work.id,$username">Favorite</button></li>
+            ##This works by sending both the title and the id to the worklink script,
+            ##Then having worklink handle what it looks like
+            ##So split and the id doesnt actually show up on the list
+        #end
+        </p>
+    </ol>
+</div>
+<script>
+    function addFav(input) {
+        var inputArr = input.split(",");
+
+        const hostname = window.location.href;
+        var host = new URL(hostname).host;
+
+        fetch('https://' + host + '/addFav?username=' + inputArr[1] + "&workId="
+                + inputArr[0], {
+                    method: 'POST',
+                }
+        ).then(res => window.location.reload(true));
+    }
+    let favButtons = document.querySelectorAll("button")
+    Array.prototype.forEach.call(favButtons, function(button) {
+        button.addEventListener('click', addFav.bind(null, button.className));
+    });
+</script>
+#end
+<script src="/js/addfavorite.js"></script>
+<script src="/js/worklink.js"></script>
+#parse("public/templates/bottom.vm")

@@ -1,0 +1,18 @@
+#set( $title = "Users List" )
+#parse("public/templates/top.vm")
+
+#if ($users)
+
+<h1>List of the users:</h1>
+<div class="divContents">
+    <ol>
+    <p>
+        #foreach($user in $users )
+            <li class="content user"><i>$user.username</i></li>
+        #end
+        </p>
+    </ol>
+</div>
+#end
+
+#parse("public/templates/bottom.vm")

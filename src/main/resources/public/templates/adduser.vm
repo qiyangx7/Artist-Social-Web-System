@@ -1,0 +1,26 @@
+#set( $title = "Add User" )
+#parse("public/templates/top.vm")
+
+<link rel="stylesheet" href="css/TeamBApp.css">
+
+#if($added)
+<h2>User was successfully added!</h2>
+<br />
+#end
+
+#if($failedAdd)
+<h2>Failed to add the User!</h2>
+<br />
+#end
+
+<h2>Add a new User</h2>
+<form action="/adduser" method="post" class="content" id="formAddUser">
+    <div>
+        <label for="username">Username: </label>
+        <input type="text" name="username" placeholder="username" id="username" required>
+    </div>
+    <br />
+    <input type="submit" value="Add" id="submitAddUser" />
+</form>
+
+#parse("public/templates/bottom.vm")

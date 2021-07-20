@@ -1,0 +1,78 @@
+#set( $title = "Update Work" )
+#parse("public/templates/top.vm")
+
+#if($added)
+<h2>Work was successfully updated!</h2>
+<br />
+#end
+
+#if($failedAdd)
+<h2>Failed to update Work!</h2>
+<br />
+#end
+
+<h2>Update Work</h2>
+<form id="updateWork" onsubmit="updateWork(quill)">
+    <div>
+        <input type="hidden" name="workId" id = "workId" value="$workId"/>
+    </div>
+    <div>
+        <label for="title">Title: </label>
+        <input type="text" name="title" placeholder="title" id="title" required>
+    </div>
+    <div>
+        <label for="status">Status: </label>
+        <input type="number" name="status" placeholder="status" id="status" required>
+    </div>
+        <label for="description">Description: </label>
+        <input type="text" name="description" placeholder="description" id="description">
+        </div>
+    <div>
+        <!-- Include stylesheet -->
+        <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+        <!-- Create the editor container -->
+        <div id="editor">
+            <p>Hello World!</p>
+            <p>Some initial <strong>bold</strong> text</p>
+            <p><br></p>
+        </div>
+
+        <!-- Include the Quill library -->
+        <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+        <!-- Initialize Quill editor -->
+        <script>
+            var quill = new Quill('#editor', {
+                theme: 'snow'
+            });
+        </script>
+    </div>
+    <br />
+    <input type="submit" value="Update" id="submitUpdateWork" />
+</form>
+
+<script>
+    var _form = document.querySelector("#updateWork");
+
+    _form.addEventListener('submit', (e)=>{
+        // var _title = document.querySelector("#title").value;
+        // console.log(_title);
+        e.preventDefault();
+    });
+</script>
+
+<!-- Main Quill library -->
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+
+<!-- Theme included stylesheets -->
+<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+
+<!-- Core build with no theme, formatting, non-essential modules -->
+<link href="//cdn.quilljs.com/1.3.6/quill.core.css" rel="stylesheet">
+<script src="//cdn.quilljs.com/1.3.6/quill.core.js"></script>
+
+<script src="/js/updatework.js"></script>
+#parse("public/templates/bottom.vm")
